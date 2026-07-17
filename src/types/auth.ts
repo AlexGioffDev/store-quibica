@@ -26,6 +26,10 @@ export interface Name {
   lastname: string
 }
 
+export interface LoginPayload {
+  username: string,
+  password: string
+}
 
 export interface LoginData {
   token: string

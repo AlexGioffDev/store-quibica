@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { getCategories } from '@/services/productService'
 import { ref, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 const isMenuOpen = ref(false)
 
@@ -38,12 +41,20 @@ onMounted(() => {
             {{ category }}
           </li>
         </ul>
-        <li>
-          <a class="btn btn-fill" href="">Sign In</a>
-        </li>
-        <li>
-          <a class="btn btn-outline" href="">Sign Up</a>
-        </li>
+        <div v-if="authStore.isAuthenticated">
+          <h3>
+            Hello, <span>{{ authStore.username }}</span>
+          </h3>
+          <button @click="authStore.logout()">Logout</button>
+        </div>
+        <div v-else>
+          <li>
+            <a class="btn btn-fill" href="">Sign In</a>
+          </li>
+          <li>
+            <a class="btn btn-outline" href="">Sign Up</a>
+          </li>
+        </div>
       </ul>
     </nav>
 
