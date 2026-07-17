@@ -8,6 +8,7 @@ html {
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
+  overflow-x: hidden;
 }
 
 :not(dialog) {
@@ -24,6 +25,8 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100svh;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 h1,
@@ -82,6 +85,13 @@ ol[role='list'] {
 a:not([class]) {
   text-decoration-skip-ink: auto;
   color: currentColor;
+}
+
+a:visited,
+a:focus,
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 :target {
