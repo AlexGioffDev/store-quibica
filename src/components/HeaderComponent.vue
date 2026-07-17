@@ -2,8 +2,10 @@
 import { getCategories } from '@/services/productService'
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useThemeStore } from '@/stores/theme'
 
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 
 const isMenuOpen = ref(false)
 
@@ -52,7 +54,13 @@ onMounted(() => {
             <a class="btn btn-fill" href="">Sign In</a>
           </li>
           <li>
-            <a class="btn btn-outline" href="">Sign Up</a>
+            <button
+              type="button"
+              aria-label="Cambia tema chiaro/scuro"
+              @click="themeStore.toggleTheme()"
+            >
+              change-theme
+            </button>
           </li>
         </div>
       </ul>

@@ -3,3 +3,9 @@
   --secondary-color: #1e1f1f;
   --accent-color: #009bab;
 }
+
+[data-theme='dark'] {
+  --primary-color: #1e1f1f;
+  --secondary-color: #ebded2;
+  --accent-color: #00c4d6;
+}
