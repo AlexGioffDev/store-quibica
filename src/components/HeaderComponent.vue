@@ -3,16 +3,23 @@ import { getCategories } from '@/services/productService'
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
+import { useCartStore } from '@/stores/cart'
 
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
+const cartStore = useCartStore()
 
+const isCartOpen = ref(false)
 const isMenuOpen = ref(false)
 
 const categories = ref<string[]>([])
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value
+}
+
+function toggleCart() {
+  isCartOpen.value = !isCartOpen.value
 }
 
 function closeMenu() {
@@ -53,16 +60,26 @@ onMounted(() => {
           <li>
             <a class="btn btn-fill" href="">Sign In</a>
           </li>
-          <li>
-            <button
-              type="button"
-              aria-label="Cambia tema chiaro/scuro"
-              @click="themeStore.toggleTheme()"
-            >
-              change-theme
-            </button>
-          </li>
         </div>
+        <li>
+          <button
+            type="button"
+            aria-label="Cambia tema chiaro/scuro"
+            @click="themeStore.toggleTheme()"
+          >
+            change-theme
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            @click="toggleCart"
+            :aria-expanded="isCartOpen"
+            aria-label="Apri il carrello"
+          >
+            Cart {{ cartStore.totalItems }}
+          </button>
+        </li>
       </ul>
     </nav>
 
@@ -97,6 +114,24 @@ onMounted(() => {
           </li>
         </ul>
       </nav>
+    </Transition>
+    <Transition name="dropdown">
+      <div v-if="isCartOpen">
+        <p v-if="cartStore.items.length === 0">Cart Empty</p>
+
+        <ul v-else>
+          <li v-for="item in cartStore.items" :key="item.id">
+            <img :src="item.image" />
+            <p>{{ item.title }}</p>
+            <p>Qty: {{ item.quantity }} - {{ (item.price * item.quantity).toFixed(2) }} €</p>
+            <button type="button" @click="cartStore.removeFromCart(item.id)">Remove</button>
+          </li>
+        </ul>
+
+        <div v-if="cartStore.items.length > 0">
+          <p>Total {{ cartStore.totalPrice.toFixed(2) }} €</p>
+        </div>
+      </div>
     </Transition>
   </header>
 </template>
@@ -214,6 +249,19 @@ header {
 .drawer-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 
 @media (max-width: 768px) {

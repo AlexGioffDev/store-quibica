@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import type { Product } from '@/types'
+import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+
+const authStore = useAuthStore()
+const cartStore = useCartStore()
 
 defineProps<{ product: Product }>()
 </script>
@@ -14,6 +19,9 @@ defineProps<{ product: Product }>()
         <h3 class="product-card__category">{{ product.category }}</h3>
         <h3 class="product-card__title">{{ product.title.slice(0, 40) }}</h3>
         <p class="product-card__price">{{ product.price.toFixed(2) }} €</p>
+        <p>
+          <button @click="cartStore.addToCart(product)">Add to Cart</button>
+        </p>
       </div>
     </article>
   </router-link>
