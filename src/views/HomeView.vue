@@ -5,6 +5,7 @@ import { getProducts, getProductsByCategory } from '@/services/productService'
 import ProductCard from '@/components/ProductCard.vue'
 import { useRoute } from 'vue-router'
 import { useErrorModal } from '@/stores/errorModal'
+import LoadingComponent from '@/components/LoadingComponent.vue'
 
 const errorModal = useErrorModal()
 const route = useRoute()
@@ -43,9 +44,7 @@ watch(
 </script>
 
 <template>
-  <div v-if="isLoading">
-    <p>On Loading...</p>
-  </div>
+  <LoadingComponent v-if="isLoading" />
   <div v-else>
     <section class="section-container">
       <h3
