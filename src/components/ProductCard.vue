@@ -2,6 +2,7 @@
 import type { Product } from '@/types'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { LucideShoppingCart } from 'lucide-vue-next'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
@@ -18,10 +19,16 @@ defineProps<{ product: Product }>()
       <div class="product-card__body">
         <h3 class="product-card__category">{{ product.category }}</h3>
         <h3 class="product-card__title">{{ product.title.slice(0, 40) }}</h3>
-        <p class="product-card__price">{{ product.price.toFixed(2) }} €</p>
-        <p>
-          <button @click="cartStore.addToCart(product)">Add to Cart</button>
-        </p>
+        <div class="product-card__info">
+          <button
+            class="btn btn-cart"
+            v-if="authStore.isAuthenticated"
+            @click.stop.prevent="cartStore.addToCart(product)"
+          >
+            <LucideShoppingCart />
+          </button>
+          <p class="product-card__price">{{ product.price.toFixed(2) }} €</p>
+        </div>
       </div>
     </article>
   </router-link>
@@ -60,17 +67,28 @@ defineProps<{ product: Product }>()
       color: #8f8f8f;
     }
 
+    .product-card__info {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+
+      .btn-cart {
+        color: var(--secondary-color);
+      }
+
+      .product-card__price {
+        color: var(--accent-color);
+        font-weight: 700;
+        font-size: 1rem;
+      }
+    }
+
     .product-card__title {
       font-size: 1.2rem;
       font-weight: bold;
       color: var(--accent-color);
-    }
-
-    .product-card__price {
-      align-self: flex-end;
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--secondary-color);
     }
   }
 }

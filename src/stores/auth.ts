@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { login as LoginRequest } from "@/services/authService";
 import type { LoginPayload } from "@/types";
-
+import { useCartStore } from "./cart";
 
 const TOKEN_STORAGE_KEY = "auth_token_qstore"
 const USERNAME_STORAGE_KEY = "username_qstore"
@@ -34,6 +34,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
+    const cartStore = useCartStore();
+    cartStore.clearCart();
     token.value = null;
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     localStorage.removeItem(USERNAME_STORAGE_KEY);
