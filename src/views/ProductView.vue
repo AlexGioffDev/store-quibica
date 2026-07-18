@@ -3,8 +3,13 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Product } from '@/types'
 import { getProductById } from '@/services/productService'
-
+import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+import { LucideShoppingCart } from 'lucide-vue-next'
 const route = useRoute()
+
+const authStore = useAuthStore()
+const cartStore = useCartStore()
 
 const product = ref<Product | null>(null)
 const isLoading = ref(false)
@@ -48,7 +53,16 @@ watch(
     <div class="product-info">
       <h3 class="product-info__category">{{ product.category }}</h3>
       <h1 class="product-info__title">{{ product.title }}</h1>
-      <p class="product-info__price">{{ product.price.toFixed(2) }} €</p>
+      <div class="product-info__box">
+        <button
+          class="btn btn-cart"
+          v-if="authStore.isAuthenticated"
+          @click="cartStore.addToCart(product)"
+        >
+          <LucideShoppingCart :size="28" />
+        </button>
+        <p class="product-info__price">{{ product.price.toFixed(2) }} €</p>
+      </div>
       <p class="product-info__description">
         {{ product.description.slice(0, 1).toUpperCase() + product.description.slice(1) }}
       </p>
@@ -83,6 +97,10 @@ watch(
   }
 }
 
+.btn-cart {
+  color: var(--secondary-color);
+}
+
 .product-info {
   display: flex;
   flex-direction: column;
@@ -108,11 +126,19 @@ watch(
     }
   }
 
+  .product-info__box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
   .product-info__price {
     align-self: flex-end;
     font-size: 1.4rem;
     font-weight: 600;
-    color: var(--secondary-color);
+    color: var(--accent-color);
 
     @media (min-width: 768px) {
       font-size: 1.8rem;
