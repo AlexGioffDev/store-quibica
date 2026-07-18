@@ -21,7 +21,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <section>
+  <section class="form-container">
     <h1>Login</h1>
     <form @submit.prevent="handleLogin">
       <div>
@@ -49,3 +49,56 @@ async function handleLogin() {
     </form>
   </section>
 </template>
+
+<style scoped>
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  height: 100%;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-color);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      label {
+        font-weight: 600;
+        color: var(--secondary-color);
+      }
+
+      input {
+        border: none;
+        outline: none;
+        padding: 0.25rem 1rem;
+        background: var(--accent-color);
+        border-radius: 14px;
+      }
+    }
+    button {
+      border: 1px solid var(--secondary-color);
+      background-color: var(--accent-color);
+      padding: 0.2rem 1rem;
+      border-radius: 14px;
+      color: var(--secondary-color);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
+}
+</style>
