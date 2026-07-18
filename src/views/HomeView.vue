@@ -4,16 +4,16 @@ import type { Product } from '@/types'
 import { getProducts, getProductsByCategory } from '@/services/productService'
 import ProductCard from '@/components/ProductCard.vue'
 import { useRoute } from 'vue-router'
+import { useErrorModal } from '@/stores/errorModal'
 
+const errorModal = useErrorModal()
 const route = useRoute()
 
 const products = ref<Product[]>([])
 const isLoading = ref(false)
-const error = ref<string | null>(null)
 
 const fetchProducts = async () => {
   isLoading.value = true
-  error.value = null
 
   try {
     const category = route.query.category
@@ -24,7 +24,7 @@ const fetchProducts = async () => {
       products.value = await getProducts()
     }
   } catch {
-    error.value = 'Something went wrong! try again later'
+    errorModal.showError('Something went wrong! try again later')
   } finally {
     isLoading.value = false
   }

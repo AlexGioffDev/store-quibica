@@ -6,6 +6,10 @@ import { getProductById } from '@/services/productService'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { LucideShoppingCart } from 'lucide-vue-next'
+import { useErrorModal } from '@/stores/errorModal'
+
+const errorModal = useErrorModal()
+
 const route = useRoute()
 
 const authStore = useAuthStore()
@@ -13,17 +17,15 @@ const cartStore = useCartStore()
 
 const product = ref<Product | null>(null)
 const isLoading = ref(false)
-const error = ref<string | null>(null)
 
 const fetchProduct = async () => {
   isLoading.value = true
-  error.value = null
 
   try {
     const id = Number(route.params.id)
     product.value = await getProductById(id)
   } catch {
-    error.value = 'Something went wrong! try again later'
+    errorModal.showError('Something went wrong! try again later')
   } finally {
     isLoading.value = false
   }
@@ -42,9 +44,6 @@ watch(
 <template>
   <div v-if="isLoading">
     <p>On Loading...</p>
-  </div>
-  <div v-else-if="error">
-    <p>{{ error }}</p>
   </div>
   <article v-else-if="product" class="product-container">
     <div class="product-image__wrapper">
