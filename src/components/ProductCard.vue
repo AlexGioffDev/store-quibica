@@ -11,29 +11,34 @@ defineProps<{ product: Product }>()
 </script>
 
 <template>
-  <router-link :to="{ name: 'product-detail', params: { id: product.id } }">
-    <article class="product-card">
+  <article class="product-card">
+    <router-link
+      :to="{ name: 'product-detail', params: { id: product.id } }"
+      class="product-card__link"
+    >
       <div class="product-card__image-wrapper">
         <img :src="product.image" :alt="product.title" class="product-card__image" />
       </div>
       <div class="product-card__body">
         <h3 class="product-card__category">{{ product.category }}</h3>
         <h3 class="product-card__title">{{ product.title.slice(0, 40) }}</h3>
-        <div class="product-card__info">
-          <button
-            class="btn btn-cart"
-            v-if="authStore.isAuthenticated"
-            @click.stop.prevent="cartStore.addToCart(product)"
-          >
-            <LucideShoppingCart />
-          </button>
-          <p class="product-card__price">{{ product.price.toFixed(2) }} €</p>
-        </div>
       </div>
-    </article>
-  </router-link>
-</template>
+    </router-link>
 
+    <div class="product-card__info">
+      <button
+        v-if="authStore.isAuthenticated"
+        class="btn btn-cart"
+        type="button"
+        :aria-label="`Add ${product.title} to cart`"
+        @click="cartStore.addToCart(product)"
+      >
+        <LucideShoppingCart />
+      </button>
+      <p class="product-card__price">{{ product.price.toFixed(2) }} €</p>
+    </div>
+  </article>
+</template>
 <style scoped>
 .product-card {
   display: flex;
@@ -66,30 +71,29 @@ defineProps<{ product: Product }>()
       font-size: 0.8rem;
       color: #8f8f8f;
     }
+  }
+  .product-card__info {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
 
-    .product-card__info {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 0.5rem;
-
-      .btn-cart {
-        color: var(--secondary-color);
-      }
-
-      .product-card__price {
-        color: var(--accent-color);
-        font-weight: 700;
-        font-size: 1rem;
-      }
+    .btn-cart {
+      color: var(--secondary-color);
     }
 
-    .product-card__title {
-      font-size: 1.2rem;
-      font-weight: bold;
+    .product-card__price {
       color: var(--accent-color);
+      font-weight: 700;
+      font-size: 1rem;
     }
+  }
+
+  .product-card__title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-color);
   }
 }
 </style>
