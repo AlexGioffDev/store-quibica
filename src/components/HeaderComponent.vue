@@ -5,6 +5,10 @@ import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { useCartStore } from '@/stores/cart'
 
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
 const authStore = useAuthStore()
 const themeStore = useThemeStore()
 const cartStore = useCartStore()
@@ -40,7 +44,7 @@ onMounted(() => {
       <nav>
         <ul v-if="authStore.isAuthenticated">
           <li>
-            <button class="btn" aria-label="logout" @click="authStore.logout">
+            <button class="btn" aria-label="Logout" @click="authStore.logout" type="button">
               <LogOut :size="28" />
             </button>
           </li>
@@ -48,7 +52,7 @@ onMounted(() => {
         <ul v-else>
           <li>
             <router-link :to="{ name: 'login' }">
-              <button class="btn" aria-label="login">
+              <button class="btn" aria-label="Login" type="button">
                 <LogIn :size="28" />
               </button>
             </router-link>
@@ -61,6 +65,7 @@ onMounted(() => {
               @click="toggleCart"
               aria-label="Apri carrello"
               :aria-expanded="isCartOpen"
+              type="button"
             >
               <ShoppingCart :size="28" />
             </button>
@@ -74,7 +79,12 @@ onMounted(() => {
               <div v-if="isCartOpen" class="cart-menu">
                 <div class="cart-menu__top">
                   <p>Cart</p>
-                  <button class="btn" @click="toggleCart">
+                  <button
+                    type="button"
+                    class="btn"
+                    @click="toggleCart"
+                    aria-label="Chiudi Carrello"
+                  >
                     <X :size="28" />
                   </button>
                 </div>
@@ -102,6 +112,8 @@ onMounted(() => {
                       Total: <span>{{ cartStore.totalPrice.toFixed(2) }} €</span>
                     </h3>
                     <button
+                      type="button"
+                      aria-label="Svuota Carrello"
                       class="btn btn-trash"
                       @click="
                         () => {
@@ -118,7 +130,12 @@ onMounted(() => {
               </div>
             </Transition>
           </div>
-          <button @click="themeStore.toggleTheme" class="btn">
+          <button
+            type="button"
+            @click="themeStore.toggleTheme"
+            class="btn"
+            :aria-label="themeStore.theme === 'light' ? 'Attiva tema scuro' : 'Attiva tema chiaro'"
+          >
             <Sun v-if="themeStore.theme === 'light'" :size="28" />
             <Moon v-else :size="28" />
           </button>
@@ -126,18 +143,22 @@ onMounted(() => {
       </nav>
     </div>
     <div class="down">
-      <div class="categories-container">
-        <router-link :to="{ name: 'home' }">
+      <nav aria-label="Categorie prodotti" class="categories-container">
+        <router-link
+          :to="{ name: 'home' }"
+          :aria-current="!route.query.category ? 'page' : undefined"
+        >
           <p>All</p>
         </router-link>
         <router-link
           v-for="category in categories"
           :key="category"
           :to="{ name: 'home', query: { category: category } }"
+          :aria-current="route.query.category === category ? 'page' : undefined"
         >
           <p>{{ category }}</p>
         </router-link>
-      </div>
+      </nav>
     </div>
   </header>
 </template>

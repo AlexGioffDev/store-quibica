@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { LucideShoppingCart } from 'lucide-vue-next'
 import { useErrorModal } from '@/stores/errorModal'
+import LoadingComponent from '@/components/LoadingComponent.vue'
 
 const errorModal = useErrorModal()
 
@@ -42,9 +43,7 @@ watch(
 </script>
 
 <template>
-  <div v-if="isLoading">
-    <p>On Loading...</p>
-  </div>
+  <LoadingComponent v-if="isLoading" />
   <article v-else-if="product" class="product-container">
     <div class="product-image__wrapper">
       <img :src="product.image" :alt="product.title" />
@@ -54,9 +53,11 @@ watch(
       <h1 class="product-info__title">{{ product.title }}</h1>
       <div class="product-info__box">
         <button
+          type="button"
           class="btn btn-cart"
           v-if="authStore.isAuthenticated"
           @click="cartStore.addToCart(product)"
+          :aria-label="`Add ${product.title} to Cart`"
         >
           <LucideShoppingCart :size="28" />
         </button>
